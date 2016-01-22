@@ -27,8 +27,8 @@ query = {
         }
     },
     "fields": ["url", "topic_name", "text"],
-    "size": 3000
-    #"size": 100000000
+    #"size": 3000
+    "size": 100000000
 }
 
 res = es.search(body=query, 
@@ -85,7 +85,7 @@ labels_ret = [labels[ids.index(id)] for id in ids_ret]
 
 print "Features ", len(features)
 
-with open("linearSVC_features.txt", "w") as f:
+with open("linearSVC_features_no_duplicates.txt", "w") as f:
     f.write(u"::".join(features).encode('utf-8').strip())
     
 clf = svm.LinearSVC()
@@ -95,7 +95,7 @@ print "Cross Validation Scorees ", scores
 
 clf.fit(data, labels_ret) 
 
-joblib.dump(clf, 'trecdd_model_linearSVC.pkl') 
+joblib.dump(clf, 'trecdd_model_linearSVC_no_duplicates.pkl') 
 
 # clf_linearsvc = joblib.load('trecdd_model_linearSVC.pkl')
 
