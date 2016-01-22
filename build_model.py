@@ -26,9 +26,9 @@ query = {
             }
         }
     },
-    "fields": ["url", "topic_name"],
-    #"size": 1000
-    "size": 100000000
+    "fields": ["url", "topic_name", "text"],
+    "size": 3000
+    #"size": 100000000
 }
 
 res = es.search(body=query, 
@@ -54,22 +54,24 @@ ebola_topics = [ "DD15-"+str(i) for i in range(49, 89)]
 
 labels = []
 ids = []
-count= 0
+text = []
+
 for rec in records:
     try:
-        labels.append(ebola_topics.index(rec["topic_name"][0]))
-        print rec["topic_name"]
-        ids.append(rec["id"])
-        if len(rec["topic_name"]) > 1:
-            print rec["topic_name"]
-            count = count + 1
+        if text.index(rec["text"]):
+            print "Duplicate text found ", rec["id"]
     except KeyError:
         pprint(rec)
+    except ValueError:
+        labels.append(ebola_topics.index(rec["topic_name"][0]))
+        ids.append(rec["id"])
+        text.append(rec["text"])
+        
 
-print "total ", len(records), " docs with more than one topic ", count
 del records
+del text
 
-exit
+print "Total documents ", len(ids)
 
 print "Before term tfidf"
 
